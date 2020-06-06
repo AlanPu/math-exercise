@@ -1,9 +1,10 @@
+import 'dart:async';
+
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:math_exercise/progress_text.dart';
 import 'package:math_exercise/question.dart';
-import 'package:math_exercise/question_add.dart';
 
 class ExerciseScreen extends StatelessWidget {
   final int numRange;
@@ -53,6 +54,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   bool isLastCorrect = false;
   final answerTextController = TextEditingController();
   final answerFocusNode = FocusNode();
+  String imagePath = 'assets/images/pico-a.jpg';
 
   _ExerciseAreaState({@required this.numRange, @required this.numOfExercise})
       : super() {
@@ -115,7 +117,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                     left: 50,
                   ),
                   child: Image.asset(
-                    'assets/images/pico-a.jpg',
+                    imagePath,
                     width: 150,
                     height: 150,
                   ),
@@ -152,18 +154,36 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                           if (isLastCorrect) {
                             combo++;
                           }
+                          for (int i = 0; i < 3; i++) {
+                            Timer(Duration(milliseconds: 300), () {
+                              setState(() {
+                                imagePath = 'assets/images/pico-b.jpg';
+                              });
+                            });
+                            Timer(Duration(milliseconds: 300), () {
+                              setState(() {
+                                imagePath = 'assets/images/pico-c.jpg';
+                              });
+                            });
+                          }
                           correctCount++;
                           isLastCorrect = true;
                         } else {
                           isLastCorrect = false;
                           combo = 0;
-                        }
-                        if (currentNum == numOfExercise) {
-                        } else {
-                          currentNum++;
-                          question = Question.next(min: 0, max: numRange);
-                          answerTextController.clear();
-                          answerFocusNode.requestFocus();
+                          imagePath = 'assets/images/pico-d.jpg';
+                          Timer(Duration(seconds: 2), () {
+                            setState(() {
+                              imagePath = 'assets/images/pico-a.jpg';
+                              if (currentNum == numOfExercise) {
+                              } else {
+                                currentNum++;
+                                question = Question.next(min: 0, max: numRange);
+                                answerTextController.clear();
+                                answerFocusNode.requestFocus();
+                              }
+                            });
+                          });
                         }
                       });
                     },
