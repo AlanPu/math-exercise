@@ -59,7 +59,7 @@ class NumSlider {
                 margin: EdgeInsets.only(
                   left: 5,
                 ),
-                width: 155,
+                width: 145,
                 child: CupertinoSlider(
                   value: this.value.toDouble(),
                   min: this.min.toDouble(),
