@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:math_exercise/progress_text.dart';
 import 'package:math_exercise/question.dart';
+import 'package:math_exercise/question_result.dart';
 
 import 'image_animation.dart';
 
@@ -55,9 +56,10 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   int numOfExercise;
   bool isLastCorrect = false;
   final answerTextController = TextEditingController();
-  final answerFocusNode = FocusNode();
+  FocusNode answerFocusNode = FocusNode();
   int imageStartIndex = 1;
   int imageEndIndex = 1;
+  TextField answerInputField;
   static final Image imgHappyFace = Image.asset(
     'assets/images/pico-1.jpg',
     width: 150,
@@ -81,6 +83,71 @@ class _ExerciseAreaState extends State<ExerciseArea> {
         h: 150,
         entry: ImagesAnimationEntry(
             imgLowIndex, imgHighIndex, "assets/images/pico-%s.jpg"));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    answerInputField = TextField(
+      focusNode: answerFocusNode,
+      controller: answerTextController,
+      autocorrect: false,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        hintText: '输入答案...',
+        hintStyle: TextStyle(color: Colors.grey),
+        filled: true,
+        fillColor: Colors.white70,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.lightBlue, width: 2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.lightBlue),
+        ),
+      ),
+      onSubmitted: (String value) {
+        answer = int.parse(value);
+        if (question.isCorrect(answer)) {
+          setState(() {
+            img.setChild(getImageAnimation(2, 3));
+          });
+          if (isLastCorrect) {
+            combo++;
+          }
+          correctCount++;
+          isLastCorrect = true;
+        } else {
+          setState(() {
+            img.setChild(imgSadFace);
+          });
+          isLastCorrect = false;
+          combo = 0;
+        }
+        Timer(Duration(seconds: 2), () {
+          if (currentNum == numOfExercise) {
+            setState(() {
+              answerFocusNode.unfocus();
+              answerTextController.clear();
+              answerInputField = TextField(enabled: false);
+              question =
+                  QuestionResult(total: numOfExercise, correct: correctCount);
+              img.setChild(imgHappyFace);
+            });
+          } else {
+            setState(() {
+              img.setChild(imgHappyFace);
+              currentNum++;
+              question = Question.next(min: 0, max: numRange);
+              answerTextController.clear();
+              answerFocusNode.requestFocus();
+            });
+          }
+        });
+      },
+    );
   }
 
   @override
@@ -109,7 +176,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
           ),
           Container(
             margin: EdgeInsets.only(
-              top: 70,
+              top: 30,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,11 +205,6 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                   padding: const EdgeInsets.only(
                     left: 50,
                   ),
-                  // child: Image.asset(
-                  //   imagePath,
-                  //   width: 150,
-                  //   height: 150,
-                  // ),
                   child: img.child,
                 ),
                 Padding(
@@ -150,58 +212,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                     left: 8.0,
                     right: 8.0,
                   ),
-                  child: TextField(
-                    focusNode: answerFocusNode,
-                    controller: answerTextController,
-                    autocorrect: false,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      hintText: '输入答案...',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      filled: true,
-                      fillColor: Colors.white70,
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                        borderSide:
-                            BorderSide(color: Colors.lightBlue, width: 2),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(12.0)),
-                        borderSide: BorderSide(color: Colors.lightBlue),
-                      ),
-                    ),
-                    onSubmitted: (String value) {
-                      answer = int.parse(value);
-                      if (question.isCorrect(answer)) {
-                        setState(() {
-                          img.setChild(getImageAnimation(2, 3));
-                        });
-                        if (isLastCorrect) {
-                          combo++;
-                        }
-                        correctCount++;
-                        isLastCorrect = true;
-                      } else {
-                        setState(() {
-                          img.setChild(imgSadFace);
-                        });
-                        isLastCorrect = false;
-                        combo = 0;
-                      }
-                      if (currentNum == numOfExercise) {
-                      } else {
-                        Timer(Duration(seconds: 2), () {
-                          setState(() {
-                            img.setChild(imgHappyFace);
-                            currentNum++;
-                            question = Question.next(min: 0, max: numRange);
-                            answerTextController.clear();
-                            answerFocusNode.requestFocus();
-                          });
-                        });
-                      }
-                    },
-                  ),
+                  child: answerInputField,
                 )
               ],
             ),
