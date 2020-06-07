@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:math_exercise/progress_text.dart';
 import 'package:math_exercise/question.dart';
 
+import 'image_animation.dart';
+
 class ExerciseScreen extends StatelessWidget {
   final int numRange;
   final int numOfExercise;
@@ -54,11 +56,31 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   bool isLastCorrect = false;
   final answerTextController = TextEditingController();
   final answerFocusNode = FocusNode();
-  String imagePath = 'assets/images/pico-a.jpg';
+  int imageStartIndex = 1;
+  int imageEndIndex = 1;
+  static final Image imgHappyFace = Image.asset(
+    'assets/images/pico-1.jpg',
+    width: 150,
+    height: 150,
+  );
+  static final Image imgSadFace = Image.asset(
+    'assets/images/pico-4.jpg',
+    width: 150,
+    height: 150,
+  );
+  Img img = Img(child: imgHappyFace);
 
   _ExerciseAreaState({@required this.numRange, @required this.numOfExercise})
       : super() {
     question = Question.next(min: 0, max: numRange);
+  }
+
+  static getImageAnimation(int imgLowIndex, int imgHighIndex) {
+    return ImagesAnimation(
+        w: 150,
+        h: 150,
+        entry: ImagesAnimationEntry(
+            imgLowIndex, imgHighIndex, "assets/images/pico-%s.jpg"));
   }
 
   @override
@@ -116,11 +138,12 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                   padding: const EdgeInsets.only(
                     left: 50,
                   ),
-                  child: Image.asset(
-                    imagePath,
-                    width: 150,
-                    height: 150,
-                  ),
+                  // child: Image.asset(
+                  //   imagePath,
+                  //   width: 150,
+                  //   height: 150,
+                  // ),
+                  child: img.child,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(
@@ -148,44 +171,35 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                       ),
                     ),
                     onSubmitted: (String value) {
-                      setState(() {
-                        answer = int.parse(value);
-                        if (question.isCorrect(answer)) {
-                          if (isLastCorrect) {
-                            combo++;
-                          }
-                          for (int i = 0; i < 3; i++) {
-                            Timer(Duration(milliseconds: 300), () {
-                              setState(() {
-                                imagePath = 'assets/images/pico-b.jpg';
-                              });
-                            });
-                            Timer(Duration(milliseconds: 300), () {
-                              setState(() {
-                                imagePath = 'assets/images/pico-c.jpg';
-                              });
-                            });
-                          }
-                          correctCount++;
-                          isLastCorrect = true;
-                        } else {
-                          isLastCorrect = false;
-                          combo = 0;
-                          imagePath = 'assets/images/pico-d.jpg';
-                          Timer(Duration(seconds: 2), () {
-                            setState(() {
-                              imagePath = 'assets/images/pico-a.jpg';
-                              if (currentNum == numOfExercise) {
-                              } else {
-                                currentNum++;
-                                question = Question.next(min: 0, max: numRange);
-                                answerTextController.clear();
-                                answerFocusNode.requestFocus();
-                              }
-                            });
-                          });
+                      answer = int.parse(value);
+                      if (question.isCorrect(answer)) {
+                        setState(() {
+                          img.setChild(getImageAnimation(2, 3));
+                        });
+                        if (isLastCorrect) {
+                          combo++;
                         }
-                      });
+                        correctCount++;
+                        isLastCorrect = true;
+                      } else {
+                        setState(() {
+                          img.setChild(imgSadFace);
+                        });
+                        isLastCorrect = false;
+                        combo = 0;
+                      }
+                      if (currentNum == numOfExercise) {
+                      } else {
+                        Timer(Duration(seconds: 2), () {
+                          setState(() {
+                            img.setChild(imgHappyFace);
+                            currentNum++;
+                            question = Question.next(min: 0, max: numRange);
+                            answerTextController.clear();
+                            answerFocusNode.requestFocus();
+                          });
+                        });
+                      }
                     },
                   ),
                 )
@@ -195,5 +209,15 @@ class _ExerciseAreaState extends State<ExerciseArea> {
         ],
       ),
     );
+  }
+}
+
+class Img {
+  StatefulWidget child;
+
+  Img({this.child});
+
+  setChild(StatefulWidget widget) {
+    this.child = widget;
   }
 }
