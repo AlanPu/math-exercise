@@ -2,18 +2,21 @@ import 'dart:math';
 
 import 'package:math_exercise/question.dart';
 
-class QuestionMultiply extends Question {
+class QuestionDivision extends Question {
 
-  QuestionMultiply() {
-    this.type = QuestionType.Multiply;
+  QuestionDivision() {
+    this.type = QuestionType.Division;
     this.num1 = Random().nextInt(9) + 1;
     this.num2 = Random().nextInt(9) + 1;
-    this.answer = this.num1 * this.num2;
+    int result = num1 * num2;    
+    this.answer = num2;
+    num2 = num1;
+    num1 = result;
   }
 
   @override
   String getQuestion() {
-    return '$num1 x $num2 = ?';
+    return '$num1 ÷ $num2 = ?';
   }
 
   @override

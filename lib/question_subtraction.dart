@@ -2,12 +2,13 @@ import 'dart:math';
 
 import 'package:math_exercise/question.dart';
 
-class QuestionSubtract extends Question {
+class QuestionSubtraction extends Question {
 
   int min;
   int max;
 
-  QuestionSubtract({this.min, this.max}) {
+  QuestionSubtraction({this.min, this.max}) {
+    this.type = QuestionType.Subtraction;
     this.num1 = Random().nextInt(max - 1) + min;
     this.num2 = Random().nextInt(max - 1) + min;
     if (num1 < num2) {

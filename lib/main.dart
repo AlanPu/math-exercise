@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Container(
                 // Pico Logo
                 child: Image.asset(
-                  "assets/images/pico-1.jpg",
+                  "assets/images/pico-1.png",
                   width: 200,
                   height: 200,
                 ),

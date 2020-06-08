@@ -8,6 +8,7 @@ class QuestionAdd extends Question {
   int max;
 
   QuestionAdd({this.min, this.max}) {
+    this.type = QuestionType.Add;
     this.num1 = Random().nextInt(max - 1) + min;
     this.num2 = Random().nextInt(max - 1) + min;
     this.answer = this.num1 + this.num2;
