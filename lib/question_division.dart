@@ -5,7 +5,7 @@ import 'package:math_exercise/question.dart';
 class QuestionDivision extends Question {
 
   QuestionDivision() {
-    this.type = QuestionType.Division;
+    this.type = QuestionType.division;
     this.num1 = Random().nextInt(9) + 1;
     this.num2 = Random().nextInt(9) + 1;
     int result = num1 * num2;    

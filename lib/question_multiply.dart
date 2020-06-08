@@ -5,7 +5,7 @@ import 'package:math_exercise/question.dart';
 class QuestionMultiply extends Question {
 
   QuestionMultiply() {
-    this.type = QuestionType.Multiply;
+    this.type = QuestionType.multiply;
     this.num1 = Random().nextInt(9) + 1;
     this.num2 = Random().nextInt(9) + 1;
     this.answer = this.num1 * this.num2;

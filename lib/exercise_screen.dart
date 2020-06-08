@@ -94,8 +94,8 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   void initState() {
     super.initState();
 
-    showActionButton = (question.type == QuestionType.Multiply ||
-        question.type == QuestionType.Division);
+    showActionButton = (question.type == QuestionType.multiply ||
+        question.type == QuestionType.division);
 
     answerInputField = TextField(
       focusNode: answerFocusNode,
@@ -149,8 +149,8 @@ class _ExerciseAreaState extends State<ExerciseArea> {
               img.setChild(imgHappyFace);
               currentNum++;
               question = Question.next(min: 0, max: numRange);
-              showActionButton = (question.type == QuestionType.Multiply ||
-                  question.type == QuestionType.Division);
+              showActionButton = (question.type == QuestionType.multiply ||
+                  question.type == QuestionType.division);
               answerTextController.clear();
               answerFocusNode.requestFocus();
             });

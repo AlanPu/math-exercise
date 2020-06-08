@@ -36,4 +36,4 @@ abstract class Question {
   }
 }
 
-enum QuestionType { Add, Subtraction, Multiply, Division }
+enum QuestionType { add, subtraction, multiply, division }

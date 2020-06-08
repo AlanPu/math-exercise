@@ -8,7 +8,7 @@ class QuestionSubtraction extends Question {
   int max;
 
   QuestionSubtraction({this.min, this.max}) {
-    this.type = QuestionType.Subtraction;
+    this.type = QuestionType.subtraction;
     this.num1 = Random().nextInt(max - 1) + min;
     this.num2 = Random().nextInt(max - 1) + min;
     if (num1 < num2) {
