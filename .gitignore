@@ -26,4 +26,8 @@ android/app/src/main/java/
 android/app/src/main/kotlin/
 android/app/src/main/res/
 android/app/src/profile/
+**/android/.gradle
+**/android/captures/
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
 ios/
