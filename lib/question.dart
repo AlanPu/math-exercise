@@ -9,6 +9,7 @@ abstract class Question {
   int num1;
   int num2;
   int answer;
+  int tips = 0;
   QuestionType type;
 
   String getQuestion();

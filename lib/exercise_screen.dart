@@ -173,7 +173,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
             onPressed: () {
               showDialog(
                 context: context,
-                builder: (_) => ImageDialog(),
+                builder: (_) => ImageDialog(index: question.tips),
               );
             },
           ),

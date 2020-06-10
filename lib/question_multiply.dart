@@ -9,6 +9,7 @@ class QuestionMultiply extends Question {
     this.num1 = Random().nextInt(9) + 1;
     this.num2 = Random().nextInt(9) + 1;
     this.answer = this.num1 * this.num2;
+    this.tips = num1 > num2 ? num2 : num1;
   }
 
   @override

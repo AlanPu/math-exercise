@@ -12,6 +12,7 @@ class QuestionDivision extends Question {
     this.answer = num2;
     num2 = num1;
     num1 = result;
+    this.tips = num2 > answer ? answer : num2;
   }
 
   @override
