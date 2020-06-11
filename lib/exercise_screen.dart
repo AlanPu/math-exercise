@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:math_exercise/progress_text.dart';
 import 'package:math_exercise/question.dart';
 import 'package:math_exercise/question_result.dart';
+import 'package:math_exercise/review_screen.dart';
 
 import 'image_animation.dart';
 import 'image_dialog.dart';
@@ -62,7 +63,8 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   int imageEndIndex = 1;
   TextField answerInputField;
   bool showActionButton = false;
-  IconData actionIcon = Icons.info;
+  bool isCompleted = false;
+  List<Question> wrongAnswers = List<Question>();
 
   static final Image imgHappyFace = Image.asset(
     'assets/images/pico-1.png',
@@ -128,6 +130,8 @@ class _ExerciseAreaState extends State<ExerciseArea> {
           correctCount++;
           isLastCorrect = true;
         } else {
+          question.wrongAnswer = int.parse(value);
+          wrongAnswers.add(question);
           setState(() {
             img.setChild(imgSadFace);
           });
@@ -136,6 +140,8 @@ class _ExerciseAreaState extends State<ExerciseArea> {
         }
         Timer(Duration(seconds: 2), () {
           if (currentNum == numOfExercise) {
+            isCompleted = true;
+            showActionButton = wrongAnswers.length > 0;
             setState(() {
               answerFocusNode.unfocus();
               answerTextController.clear();
@@ -169,12 +175,21 @@ class _ExerciseAreaState extends State<ExerciseArea> {
         child: Padding(
           padding: const EdgeInsets.only(top: 250),
           child: FloatingActionButton(
-            child: Icon(actionIcon),
+            child: Icon(isCompleted ? Icons.rate_review : Icons.info),
             onPressed: () {
-              showDialog(
-                context: context,
-                builder: (_) => ImageDialog(index: question.tips),
-              );
+              if (!isCompleted) {
+                showDialog(
+                  context: context,
+                  builder: (_) => ImageDialog(index: question.tips),
+                );
+              } else {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ReviewScreen(wrongAnswers: wrongAnswers),
+                  ),
+                );
+              }
             },
           ),
         ),

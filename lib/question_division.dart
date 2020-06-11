@@ -9,10 +9,10 @@ class QuestionDivision extends Question {
     this.num1 = Random().nextInt(9) + 1;
     this.num2 = Random().nextInt(9) + 1;
     int result = num1 * num2;    
-    this.answer = num2;
+    this.correctAnswer = num2;
     num2 = num1;
     num1 = result;
-    this.tips = num2 > answer ? answer : num2;
+    this.tips = num2 > correctAnswer ? correctAnswer : num2;
   }
 
   @override
@@ -22,7 +22,7 @@ class QuestionDivision extends Question {
 
   @override
   bool isCorrect(int answer) {
-    return this.answer == answer;
+    return answer == this.correctAnswer;
   }
 
 }

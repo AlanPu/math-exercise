@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:math_exercise/question.dart';
 
 class QuestionResult extends Question {

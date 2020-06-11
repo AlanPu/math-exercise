@@ -16,7 +16,7 @@ class QuestionSubtraction extends Question {
       num1 = num2;
       num2 = tmp;
     }
-    this.answer = this.num1 - this.num2;
+    this.correctAnswer = this.num1 - this.num2;
   }
 
   @override
@@ -26,7 +26,7 @@ class QuestionSubtraction extends Question {
 
   @override
   bool isCorrect(int answer) {
-    return this.answer == answer;
+    return answer == this.correctAnswer;
   }
 
 }

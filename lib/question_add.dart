@@ -11,7 +11,7 @@ class QuestionAdd extends Question {
     this.type = QuestionType.add;
     this.num1 = Random().nextInt(max - 1) + min;
     this.num2 = Random().nextInt(max - 1) + min;
-    this.answer = this.num1 + this.num2;
+    this.correctAnswer = this.num1 + this.num2;
   }
 
   @override
@@ -21,7 +21,7 @@ class QuestionAdd extends Question {
 
   @override
   bool isCorrect(int answer) {
-    return this.answer == answer;
+    return answer == this.correctAnswer;
   }
 
 }

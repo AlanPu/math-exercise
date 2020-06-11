@@ -8,7 +8,8 @@ import 'package:math_exercise/question_subtraction.dart';
 abstract class Question {
   int num1;
   int num2;
-  int answer;
+  int correctAnswer;
+  int wrongAnswer;
   int tips = 0;
   QuestionType type;
 
