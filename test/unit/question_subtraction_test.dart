@@ -1,5 +1,5 @@
 import 'package:math_exercise/question_subtraction.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 main() {
   group('QuestionSubtraction Test', () {
