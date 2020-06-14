@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sprintf/sprintf.dart';
 
+import 'image_animation_entry.dart';
+
 class ImagesAnimation extends StatefulWidget {
   final double w;
   final double h;
@@ -8,7 +10,11 @@ class ImagesAnimation extends StatefulWidget {
   final int durationMilliSeconds;
 
   ImagesAnimation(
-      {Key key, this.w: 80, this.h: 80, this.entry, this.durationMilliSeconds: 800})
+      {Key key,
+      this.w: 80,
+      this.h: 80,
+      this.entry,
+      this.durationMilliSeconds: 800})
       : super(key: key);
 
   @override
@@ -25,7 +31,8 @@ class _InState extends State<ImagesAnimation> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _controller = new AnimationController(
-        vsync: this, duration: Duration(milliseconds: widget.durationMilliSeconds))
+        vsync: this,
+        duration: Duration(milliseconds: widget.durationMilliSeconds))
       ..repeat();
     _animation =
         new IntTween(begin: widget.entry.lowIndex, end: widget.entry.highIndex)
@@ -48,12 +55,4 @@ class _InState extends State<ImagesAnimation> with TickerProviderStateMixin {
       },
     );
   }
-}
-
-class ImagesAnimationEntry {
-  int lowIndex = 0;
-  int highIndex = 0;
-  String basePath;
-
-  ImagesAnimationEntry(this.lowIndex, this.highIndex, this.basePath);
 }
