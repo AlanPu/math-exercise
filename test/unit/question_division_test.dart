@@ -1,5 +1,5 @@
-import 'package:math_exercise/question_division.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:math_exercise/model/question_division.dart';
 
 main() {
   group('QuestionDivision Test', () {

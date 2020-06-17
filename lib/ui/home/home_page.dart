@@ -2,12 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:math_exercise/exercise_screen.dart';
+import 'package:math_exercise/ui/widgets/num_slider.dart';
 
-import 'num_slider.dart';
+import '../exercise/exercise_page.dart';
 
 class HomePage extends StatefulWidget {
-  
   HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
@@ -103,7 +102,7 @@ class _HomePageState extends State<HomePage> {
 
   void navigateToNextScreen(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ExerciseScreen(
+        builder: (context) => ExercisePage(
               numRange: numRange,
               numOfExercise: numOfExercise,
             )));

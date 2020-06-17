@@ -1,9 +1,8 @@
 import 'dart:math';
 
-import 'package:math_exercise/question.dart';
+import 'question.dart';
 
 class QuestionMultiply extends Question {
-
   QuestionMultiply() {
     this.type = QuestionType.multiply;
     this.num1 = Random().nextInt(9) + 1;
@@ -21,5 +20,4 @@ class QuestionMultiply extends Question {
   bool isCorrect(int answer) {
     return answer == this.correctAnswer;
   }
-
 }

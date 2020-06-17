@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 import 'exercise_area.dart';
 
-class ExerciseScreen extends StatelessWidget {
+class ExercisePage extends StatelessWidget {
   final int numRange;
   final int numOfExercise;
 
-  ExerciseScreen(
+  ExercisePage(
       {Key key, @required this.numRange, @required this.numOfExercise})
       : super(key: key);
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
-import 'package:math_exercise/question.dart';
+import 'package:math_exercise/model/question.dart';
 
-class ReviewScreen extends StatelessWidget {
+class ReviewPage extends StatelessWidget {
   final List<Question> wrongAnswers;
   final double _fontSize = 16;
 
-  ReviewScreen({this.wrongAnswers});
+  ReviewPage({this.wrongAnswers});
 
   @override
   Widget build(BuildContext context) {

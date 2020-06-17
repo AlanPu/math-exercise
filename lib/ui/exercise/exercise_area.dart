@@ -3,15 +3,14 @@ import 'dart:async';
 import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:math_exercise/progress_text.dart';
-import 'package:math_exercise/question.dart';
-import 'package:math_exercise/question_result.dart';
-import 'package:math_exercise/review_screen.dart';
-
-import 'image_animation.dart';
-import 'image_animation_entry.dart';
-import 'image_dialog.dart';
-import 'img.dart';
+import 'package:math_exercise/model/question.dart';
+import 'package:math_exercise/model/question_result.dart';
+import 'package:math_exercise/ui/image/image_animation.dart';
+import 'package:math_exercise/ui/image/image_animation_entry.dart';
+import 'package:math_exercise/ui/image/image_dialog.dart';
+import 'package:math_exercise/ui/image/img.dart';
+import 'package:math_exercise/ui/review/review_page.dart';
+import 'package:math_exercise/ui/widgets/progress_text.dart';
 
 class ExerciseArea extends StatefulWidget {
   final int numRange;
@@ -165,7 +164,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) =>
-                        ReviewScreen(wrongAnswers: wrongAnswers),
+                        ReviewPage(wrongAnswers: wrongAnswers),
                   ),
                 );
               }

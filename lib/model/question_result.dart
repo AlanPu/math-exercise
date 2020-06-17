@@ -1,4 +1,4 @@
-import 'package:math_exercise/question.dart';
+import 'question.dart';
 
 class QuestionResult extends Question {
   int total;

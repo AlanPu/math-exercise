@@ -1,5 +1,5 @@
-import 'package:math_exercise/question_multiply.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:math_exercise/model/question_multiply.dart';
 
 main() {
   group('QuestionMultiply Test', () {

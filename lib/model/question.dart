@@ -1,9 +1,10 @@
 import 'dart:math';
 
-import 'package:math_exercise/question_add.dart';
-import 'package:math_exercise/question_division.dart';
-import 'package:math_exercise/question_multiply.dart';
-import 'package:math_exercise/question_subtraction.dart';
+import 'question_add.dart';
+import 'question_division.dart';
+import 'question_multiply.dart';
+import 'question_subtraction.dart';
+
 
 abstract class Question {
   int num1;

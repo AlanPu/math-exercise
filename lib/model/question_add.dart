@@ -1,9 +1,8 @@
 import 'dart:math';
 
-import 'package:math_exercise/question.dart';
+import 'question.dart';
 
 class QuestionAdd extends Question {
-
   int min;
   int max;
 
@@ -23,5 +22,4 @@ class QuestionAdd extends Question {
   bool isCorrect(int answer) {
     return answer == this.correctAnswer;
   }
-
 }
