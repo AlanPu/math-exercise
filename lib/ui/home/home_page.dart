@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:math_exercise/ui/image/image_styles.dart';
 import 'package:math_exercise/ui/widgets/num_slider.dart';
 
 import '../exercise/exercise_page.dart';
@@ -50,8 +51,8 @@ class _HomePageState extends State<HomePage> {
                 // Pico Logo
                 child: Image.asset(
                   "assets/images/pico-1.png",
-                  width: 200,
-                  height: 200,
+                  width: ImageStyles.WIDTH_LARGE,
+                  height: ImageStyles.HEIGHT_LARGE,
                 ),
               ),
               NumSlider(

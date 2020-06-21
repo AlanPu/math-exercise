@@ -8,6 +8,7 @@ import 'package:math_exercise/model/question_result.dart';
 import 'package:math_exercise/ui/image/image_animation.dart';
 import 'package:math_exercise/ui/image/image_animation_entry.dart';
 import 'package:math_exercise/ui/image/image_dialog.dart';
+import 'package:math_exercise/ui/image/image_styles.dart';
 import 'package:math_exercise/ui/image/img.dart';
 import 'package:math_exercise/ui/review/review_page.dart';
 import 'package:math_exercise/ui/widgets/progress_text.dart';
@@ -46,13 +47,13 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   static final Image imgHappyFace = Image.asset(
     'assets/images/pico-1.png',
-    width: 150,
-    height: 150,
+    width: ImageStyles.WIDTH_SMALL,
+    height: ImageStyles.HEIGHT_SMALL,
   );
   static final Image imgSadFace = Image.asset(
     'assets/images/pico-4.png',
-    width: 150,
-    height: 150,
+    width: ImageStyles.WIDTH_SMALL,
+    height: ImageStyles.HEIGHT_SMALL,
   );
   Img img = Img(child: imgHappyFace);
 
@@ -63,8 +64,8 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   static getImageAnimation(int imgLowIndex, int imgHighIndex) {
     return ImagesAnimation(
-      w: 150,
-      h: 150,
+      w: ImageStyles.WIDTH_SMALL,
+      h: ImageStyles.HEIGHT_SMALL,
       entry: ImagesAnimationEntry(
           imgLowIndex, imgHighIndex, "assets/images/pico-%s.png"),
     );
