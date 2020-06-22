@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:math_exercise/model/question.dart';
 import 'package:math_exercise/model/question_result.dart';
+import 'package:math_exercise/ui/components/answer_input_decoration.dart';
+import 'package:math_exercise/ui/components/question_bubble.dart';
 import 'package:math_exercise/ui/image/image_animation.dart';
 import 'package:math_exercise/ui/image/image_animation_entry.dart';
 import 'package:math_exercise/ui/image/image_dialog.dart';
@@ -83,20 +85,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
       controller: answerTextController,
       autocorrect: false,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        hintText: '输入答案...',
-        hintStyle: TextStyle(color: Colors.grey),
-        filled: true,
-        fillColor: Colors.white70,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          borderSide: BorderSide(color: Colors.lightBlue, width: 2),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(12.0)),
-          borderSide: BorderSide(color: Colors.lightBlue),
-        ),
-      ),
+      decoration: AnswerInputDecoration(),
       onSubmitted: (String value) {
         answer = int.parse(value);
         if (question.isCorrect(answer)) {
@@ -119,29 +108,61 @@ class _ExerciseAreaState extends State<ExerciseArea> {
         }
         Timer(Duration(seconds: 2), () {
           if (currentNum == numOfExercise) {
-            isCompleted = true;
-            showActionButton = wrongAnswers.length > 0;
-            setState(() {
-              answerFocusNode.unfocus();
-              answerTextController.clear();
-              answerInputField = TextField(enabled: false);
-              question =
-                  QuestionResult(total: numOfExercise, correct: correctCount);
-              img.setChild(imgHappyFace);
-            });
+            _completeExercise();
           } else {
-            setState(() {
-              img.setChild(imgHappyFace);
-              currentNum++;
-              question = Question.next(min: 0, max: numRange);
-              showActionButton = (question.type == QuestionType.multiply ||
-                  question.type == QuestionType.division);
-              answerTextController.clear();
-              answerFocusNode.requestFocus();
-            });
+            _nextQuestion();
           }
         });
       },
+    );
+  }
+
+  void _nextQuestion() {
+    setState(() {
+      img.setChild(imgHappyFace);
+      currentNum++;
+      question = Question.next(min: 0, max: numRange);
+      showActionButton = (question.type == QuestionType.multiply ||
+          question.type == QuestionType.division);
+      answerTextController.clear();
+      answerFocusNode.requestFocus();
+    });
+  }
+
+  void _completeExercise() {
+    isCompleted = true;
+    showActionButton = wrongAnswers.length > 0;
+    setState(() {
+      answerFocusNode.unfocus();
+      answerTextController.clear();
+      answerInputField = TextField(enabled: false);
+      question = QuestionResult(total: numOfExercise, correct: correctCount);
+      img.setChild(imgHappyFace);
+    });
+  }
+
+  List<Widget> _getProgressTexts() {
+    return [
+      ProgressText(
+        label: '当前题数',
+        value: currentNum,
+      ).build(),
+      ProgressText(
+        label: '正确题数',
+        value: correctCount,
+      ).build(),
+      ProgressText(
+        label: '连击数',
+        value: combo,
+      ).build(),
+    ];
+  }
+
+  void _showReviewPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ReviewPage(wrongAnswers: wrongAnswers),
+      ),
     );
   }
 
@@ -162,12 +183,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                   builder: (_) => ImageDialog(index: question.tips),
                 );
               } else {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ReviewPage(wrongAnswers: wrongAnswers),
-                  ),
-                );
+                _showReviewPage();
               }
             },
           ),
@@ -180,20 +196,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                ProgressText(
-                  label: '当前题数',
-                  value: currentNum,
-                ).build(),
-                ProgressText(
-                  label: '正确题数',
-                  value: correctCount,
-                ).build(),
-                ProgressText(
-                  label: '连击数',
-                  value: combo,
-                ).build(),
-              ],
+              children: _getProgressTexts(),
             ),
             Container(
               margin: EdgeInsets.only(
@@ -206,21 +209,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                     padding: const EdgeInsets.only(
                       left: 160,
                     ),
-                    child: Bubble(
-                      margin: BubbleEdges.only(top: 10),
-                      stick: true,
-                      alignment: Alignment.bottomLeft,
-                      nip: BubbleNip.leftBottom,
-                      elevation: 2,
-                      color: Color.fromRGBO(225, 255, 199, 1.0),
-                      child: Text(
-                        question.getQuestion(),
-                        textAlign: TextAlign.right,
-                        style: TextStyle(
-                          fontSize: 25.0,
-                        ),
-                      ),
-                    ),
+                    child: QuestionBubble(text: question.getQuestion()),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
