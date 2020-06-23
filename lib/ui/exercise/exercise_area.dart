@@ -166,28 +166,46 @@ class _ExerciseAreaState extends State<ExerciseArea> {
     );
   }
 
+  Widget _widgetWithPadding(
+      {Widget widget,
+      double left = 0.0,
+      double right = 0.0,
+      double top = 0.0,
+      double bottom = 0.0}) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: left,
+        right: right,
+        top: top,
+        bottom: bottom,
+      ),
+      child: widget,
+    );
+  }
+
+  Widget _getContextButton() {
+    return FloatingActionButton(
+      child: Icon(isCompleted ? Icons.rate_review : Icons.info),
+      onPressed: () {
+        if (!isCompleted) {
+          showDialog(
+            context: context,
+            builder: (_) => ImageDialog(index: question.tips),
+          );
+        } else {
+          _showReviewPage();
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Visibility(
         visible: showActionButton,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 250),
-          child: FloatingActionButton(
-            child: Icon(isCompleted ? Icons.rate_review : Icons.info),
-            onPressed: () {
-              if (!isCompleted) {
-                showDialog(
-                  context: context,
-                  builder: (_) => ImageDialog(index: question.tips),
-                );
-              } else {
-                _showReviewPage();
-              }
-            },
-          ),
-        ),
+        child: _widgetWithPadding(widget: _getContextButton(), top: 250.0),
       ),
       body: Center(
         child: Column(
@@ -205,25 +223,16 @@ class _ExerciseAreaState extends State<ExerciseArea> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 160,
-                    ),
-                    child: QuestionBubble(text: question.getQuestion()),
+                  _widgetWithPadding(
+                    widget: QuestionBubble(text: question.getQuestion()),
+                    left: 160.0,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 50,
-                    ),
-                    child: img.child,
+                  _widgetWithPadding(
+                    widget: img.child,
+                    left: 50.0,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      left: 8.0,
-                      right: 8.0,
-                    ),
-                    child: answerInputField,
-                  )
+                  _widgetWithPadding(
+                      widget: answerInputField, left: 8.0, right: 8.0),
                 ],
               ),
             ),
