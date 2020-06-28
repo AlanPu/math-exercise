@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:math_exercise/ui/home/home_page.dart';
+import 'package:math_exercise/ui/home/math_home_page.dart';
 
 void main() {
   Widget buildTestableWidget(Widget widget) {
@@ -9,7 +9,7 @@ void main() {
   }
 
   testWidgets('Home page test', (WidgetTester tester) async {
-    await tester.pumpWidget(buildTestableWidget(HomePage(title: '计算练习')));
+    await tester.pumpWidget(buildTestableWidget(MathHomePage(title: '计算练习')));
 
     expect(find.text('计算练习'), findsOneWidget);
     expect(find.byType(Image), findsOneWidget);

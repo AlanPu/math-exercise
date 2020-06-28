@@ -7,8 +7,8 @@ import 'package:math_exercise/ui/widgets/num_slider.dart';
 
 import '../exercise/exercise_page.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+class MathHomePage extends StatefulWidget {
+  MathHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
@@ -16,7 +16,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<MathHomePage> {
   int numRange = 100;
   int numOfExercise = 30;
 

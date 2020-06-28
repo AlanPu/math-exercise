@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ui/home/home_page.dart';
+import 'ui/home/math_home_page.dart';
 
 class App extends StatelessWidget {
   // This widget is the root of your application.
@@ -12,7 +12,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: '计算练习'),
+      home: MathHomePage(title: '计算练习'),
     );
   }
 }
