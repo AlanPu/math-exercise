@@ -44,7 +44,7 @@ class ReviewPage extends StatelessWidget {
   List<Widget> _getTitleWidget() {
     return [
       _getTitleItemWidget('', 50),
-      _getTitleItemWidget('题目', 120),
+      _getTitleItemWidget('题目', 150),
       _getTitleItemWidget('正确答案', 80),
       _getTitleItemWidget('你的答案', 80),
     ];
@@ -90,7 +90,7 @@ class ReviewPage extends StatelessWidget {
         getCell(
           index: index,
           label: wrongAnswers[index].getQuestion(),
-          width: 120,
+          width: 150,
           height: 40,
         ),
         getCell(

@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:math_exercise/model/question_combined.dart';
+
 import 'question_add.dart';
 import 'question_division.dart';
 import 'question_multiply.dart';
@@ -19,7 +21,7 @@ abstract class Question {
   bool isCorrect(int answer);
 
   static Question next({int min, int max}) {
-    int i = Random().nextInt(4);
+    int i = Random().nextInt(5);
     switch (i) {
       case 0:
         return QuestionAdd(min: min, max: max);
@@ -32,6 +34,9 @@ abstract class Question {
         break;
       case 3:
         return QuestionDivision();
+        break;
+      case 4:
+        return QuestionCombined(min: min, max: max);
         break;
       default:
         return null;
