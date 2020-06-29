@@ -29,7 +29,7 @@ class QuestionBubble extends Bubble {
           color: Color.fromRGBO(225, 255, 199, 1.0),
           child: Text(
             text,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.left,
             style: TextStyle(
               fontSize: 25.0,
             ),
