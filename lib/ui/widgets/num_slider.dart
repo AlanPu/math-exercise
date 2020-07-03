@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:math_exercise/ui/global/styles.dart' as styles;
+
 class NumSlider {
   String label;
   int min;
@@ -41,7 +43,7 @@ class NumSlider {
                 child: Text(
                   '$label:',
                   style: TextStyle(
-                    fontFamily: 'NotoSerifSC-Medium',
+                    fontFamily: styles.fontFamily,
                     fontSize: 20.0,
                     color: Colors.white,
                   ),
@@ -50,7 +52,7 @@ class NumSlider {
               Text(
                 '$value',
                 style: TextStyle(
-                  fontFamily: 'NotoSerifSC-Medium',
+                  fontFamily: styles.fontFamily,
                   fontSize: 20.0,
                   color: Colors.white,
                 ),

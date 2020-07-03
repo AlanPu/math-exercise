@@ -4,15 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:math_exercise/model/question.dart';
 import 'package:math_exercise/model/question_result.dart';
-import 'package:math_exercise/ui/components/answer_input_decoration.dart';
-import 'package:math_exercise/ui/components/question_bubble.dart';
+import 'package:math_exercise/ui/widgets/answer_input_decoration.dart';
+import 'package:math_exercise/ui/widgets/question_bubble.dart';
 import 'package:math_exercise/ui/image/image_animation.dart';
 import 'package:math_exercise/ui/image/image_animation_entry.dart';
 import 'package:math_exercise/ui/image/image_dialog.dart';
 import 'package:math_exercise/ui/image/image_styles.dart';
 import 'package:math_exercise/ui/image/img.dart';
-import 'package:math_exercise/ui/review/review_page.dart';
+import 'package:math_exercise/ui/views/review_page.dart';
 import 'package:math_exercise/ui/widgets/progress_text.dart';
+import 'package:math_exercise/ui/global/styles.dart' as styles;
+import 'package:math_exercise/ui/views/score_board.dart';
 
 class ExerciseArea extends StatefulWidget {
   final int numRange;
@@ -91,11 +93,11 @@ class _ExerciseAreaState extends State<ExerciseArea> {
           setState(() {
             img.setChild(getImageAnimation(2, 3));
           });
+          correctCount++;
+          isLastCorrect = true;
           if (isLastCorrect) {
             combo++;
           }
-          correctCount++;
-          isLastCorrect = true;
         } else {
           question.wrongAnswer = int.parse(value);
           wrongAnswers.add(question);
@@ -135,7 +137,11 @@ class _ExerciseAreaState extends State<ExerciseArea> {
       answerFocusNode.unfocus();
       answerTextController.clear();
       answerInputField = TextField(enabled: false);
-      question = QuestionResult(total: numOfExercise, correct: correctCount);
+      question = QuestionResult(
+        total: numOfExercise,
+        correct: correctCount,
+        score: _calculateScore(),
+      );
       img.setChild(imgHappyFace);
     });
   }
@@ -198,6 +204,22 @@ class _ExerciseAreaState extends State<ExerciseArea> {
     );
   }
 
+  void _showScoreBoard() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ScoreBoard(),
+      ),
+    );
+  }
+
+  double _calculateScore() {
+    double score = correctCount / numOfExercise * 100;
+    if (score != score.toInt()) {
+      score = score.toInt() + 0.5;
+    }
+    return score;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -233,6 +255,31 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                   _widgetWithPadding(
                       widget: answerInputField, left: 8.0, right: 8.0),
                 ],
+              ),
+            ),
+            Visibility(
+              visible: isCompleted,
+              child: Center(
+                child: RaisedButton(
+                  color: Colors.lightBlue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(16.0),
+                    ),
+                  ),
+                  padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                  child: Text(
+                    '历史成绩',
+                    style: TextStyle(
+                      fontFamily: styles.fontFamily,
+                      fontSize: 22.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    _showScoreBoard();
+                  },
+                ),
               ),
             ),
           ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ui/home/math_home_page.dart';
+import 'ui/views/math_home_page.dart';
 
 class App extends StatelessWidget {
   // This widget is the root of your application.

@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:math_exercise/ui/image/image_styles.dart';
 import 'package:math_exercise/ui/widgets/num_slider.dart';
-
-import '../exercise/exercise_page.dart';
+import 'package:math_exercise/ui/global/styles.dart' as styles;
+import 'package:math_exercise/ui/views/exercise/exercise_page.dart';
 
 class MathHomePage extends StatefulWidget {
   MathHomePage({Key key, this.title}) : super(key: key);
@@ -41,7 +41,7 @@ class _HomePageState extends State<MathHomePage> {
                 child: Text(
                   '计算练习',
                   style: TextStyle(
-                    fontFamily: 'NotoSerifSC-Medium',
+                    fontFamily: styles.fontFamily,
                     fontSize: 40.0,
                     color: Colors.white,
                   ),
@@ -95,13 +95,13 @@ class _HomePageState extends State<MathHomePage> {
                       color: Colors.lightBlue,
                     ),
                     onPressed: () {
-                      navigateToNextScreen(context);
+                      _navigateToNextScreen(context);
                     },
                   ))
             ])));
   }
 
-  void navigateToNextScreen(BuildContext context) {
+  void _navigateToNextScreen(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ExercisePage(
               numRange: numRange,

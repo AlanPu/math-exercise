@@ -31,7 +31,7 @@ class QuestionBubble extends Bubble {
             text,
             textAlign: TextAlign.left,
             style: TextStyle(
-              fontSize: 25.0,
+              fontSize: 21.0,
             ),
           ),
         );

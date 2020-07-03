@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:math_exercise/ui/global/styles.dart' as styles;
 
 class ProgressText {
   String label;
@@ -14,7 +15,7 @@ class ProgressText {
   build() {
     return Text('$label: $value',
         style: TextStyle(
-          fontFamily: 'NotoSerifSC-Medium',
+          fontFamily: styles.fontFamily,
           fontSize: 16.0,
           color: Colors.black,
         ));
