@@ -4,7 +4,7 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 class ScoreBoard extends StatelessWidget {
   final double _fontSize = 16;
-  final columnWidth = [120.0, 80.0, 80.0, 80.0];
+  final columnWidth = [120.0, 70.0, 70.0, 70.0, 70.0];
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +45,7 @@ class ScoreBoard extends StatelessWidget {
       _getTitleItemWidget('出题数', columnWidth[1]),
       _getTitleItemWidget('正确数', columnWidth[2]),
       _getTitleItemWidget('分数', columnWidth[3]),
+      _getTitleItemWidget('连击数', columnWidth[4]),
     ];
   }
 
@@ -99,7 +100,13 @@ class ScoreBoard extends StatelessWidget {
         ),
         getCell(
           index: index,
-          label: '100',  // 分数
+          label: '99.5',  // 分数
+          width: columnWidth[3],
+          height: 40,
+        ),
+        getCell(
+          index: index,
+          label: '30',  // 连击数
           width: columnWidth[3],
           height: 40,
         ),
