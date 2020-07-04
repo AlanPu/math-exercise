@@ -226,7 +226,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Visibility(
         visible: showActionButton,
-        child: _widgetWithPadding(widget: _getContextButton(), top: 250.0),
+        child: _widgetWithPadding(widget: _getContextButton(), top: 200.0),
       ),
       body: Center(
         child: Column(
@@ -246,11 +246,11 @@ class _ExerciseAreaState extends State<ExerciseArea> {
                 children: <Widget>[
                   _widgetWithPadding(
                     widget: QuestionBubble(text: question.getQuestion()),
-                    left: 160.0,
+                    left: 130.0,
                   ),
                   _widgetWithPadding(
                     widget: img.child,
-                    left: 50.0,
+                    left: 30.0,
                   ),
                   _widgetWithPadding(
                       widget: answerInputField, left: 8.0, right: 8.0),

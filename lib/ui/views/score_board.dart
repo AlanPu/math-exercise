@@ -4,7 +4,7 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 
 class ScoreBoard extends StatelessWidget {
   final double _fontSize = 16;
-  final columnWidth = [120.0, 70.0, 70.0, 70.0, 70.0];
+  final columnWidth = [100.0, 65.0, 65.0, 65.0, 65.0];
 
   @override
   Widget build(BuildContext context) {
