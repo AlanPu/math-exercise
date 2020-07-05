@@ -6,17 +6,17 @@ import 'package:math_exercise/model/question.dart';
 import 'package:math_exercise/model/question_result.dart';
 import 'package:math_exercise/model/score.dart';
 import 'package:math_exercise/persistance/local_db.dart';
-import 'package:math_exercise/ui/widgets/answer_input_decoration.dart';
-import 'package:math_exercise/ui/widgets/question_bubble.dart';
+import 'package:math_exercise/ui/global/styles.dart' as styles;
 import 'package:math_exercise/ui/image/image_animation.dart';
 import 'package:math_exercise/ui/image/image_animation_entry.dart';
 import 'package:math_exercise/ui/image/image_dialog.dart';
 import 'package:math_exercise/ui/image/image_styles.dart';
 import 'package:math_exercise/ui/image/img.dart';
 import 'package:math_exercise/ui/views/review_page.dart';
-import 'package:math_exercise/ui/widgets/progress_text.dart';
-import 'package:math_exercise/ui/global/styles.dart' as styles;
 import 'package:math_exercise/ui/views/score_board.dart';
+import 'package:math_exercise/ui/widgets/answer_input_decoration.dart';
+import 'package:math_exercise/ui/widgets/progress_text.dart';
+import 'package:math_exercise/ui/widgets/question_bubble.dart';
 
 class ExerciseArea extends StatefulWidget {
   final int numRange;
@@ -50,6 +50,14 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   bool showActionButton = false;
   bool isCompleted = false;
   List<Question> wrongAnswers = List<Question>();
+  int totalSecond = 0;
+  int totalMinute = 0;
+  int totalHour = 0;
+  int countDownSecond = 10;
+  int remainingSecond = 0;
+  Text totalTimeText;
+  Text countDownText;
+  Timer _timer;
 
   static final Image imgHappyFace = Image.asset(
     'assets/images/pico-1.png',
@@ -77,12 +85,45 @@ class _ExerciseAreaState extends State<ExerciseArea> {
     );
   }
 
+  void _startTimeCounter() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (isCompleted) {
+        timer.cancel();
+        return;
+      }
+      totalSecond++;
+      if (totalSecond == 60) {
+        totalSecond = 0;
+        totalMinute++;
+      }
+      if (totalMinute == 60) {
+        totalHour++;
+      }
+      if (totalHour == 24) {
+        totalHour = 0;
+      }
+      setState(() {
+        totalTimeText = _getTotalTimeText();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   void initState() {
     super.initState();
 
     showActionButton = (question.type == QuestionType.multiply ||
         question.type == QuestionType.division);
+
+    totalTimeText = _getTotalTimeText();
+
+    countDownText = _getCountDownText();
 
     answerInputField = TextField(
       focusNode: answerFocusNode,
@@ -122,6 +163,8 @@ class _ExerciseAreaState extends State<ExerciseArea> {
         });
       },
     );
+
+    _startTimeCounter();
   }
 
   void _nextQuestion() {
@@ -221,7 +264,9 @@ class _ExerciseAreaState extends State<ExerciseArea> {
     final List<Score> scores = await LocalDb().getAll();
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ScoreBoard(scores: scores,),
+        builder: (context) => ScoreBoard(
+          scores: scores,
+        ),
       ),
     );
   }
@@ -241,6 +286,40 @@ class _ExerciseAreaState extends State<ExerciseArea> {
     );
   }
 
+  String _formatTime(int hour, int minute, int second) {
+    var h = hour.toString().padLeft(2, '0');
+    var m = minute.toString().padLeft(2, '0');
+    var s = second.toString().padLeft(2, '0');
+    return '$h:$m:$s';
+  }
+
+  List<Widget> _getTimer() {
+    return [
+      totalTimeText,
+      countDownText,
+    ];
+  }
+
+  Widget _getTotalTimeText() {
+    return Text(
+      '用时：${_formatTime(totalHour, totalMinute, totalSecond)}',
+      style: TextStyle(
+        fontFamily: styles.fontFamily,
+        fontSize: 16.0,
+        color: Colors.black,
+      ),
+    );
+  }
+
+  Widget _getCountDownText() {
+    return Text('倒计时：${_formatTime(0, 0, countDownSecond)}',
+        style: TextStyle(
+          fontFamily: styles.fontFamily,
+          fontSize: 16.0,
+          color: Colors.black,
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -257,6 +336,10 @@ class _ExerciseAreaState extends State<ExerciseArea> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: _getProgressTexts(),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: _getTimer(),
             ),
             Container(
               margin: EdgeInsets.only(

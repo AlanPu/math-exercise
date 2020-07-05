@@ -41,6 +41,12 @@ class _InState extends State<ImagesAnimation> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return new AnimatedBuilder(
       animation: _animation,
