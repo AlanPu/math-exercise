@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
+import 'package:math_exercise/model/score.dart';
 
 class ScoreBoard extends StatelessWidget {
   final double _fontSize = 16;
   final columnWidth = [100.0, 65.0, 65.0, 65.0, 65.0];
+  final List<Score> scores;
+
+  ScoreBoard({this.scores});
 
   @override
   Widget build(BuildContext context) {
@@ -21,12 +25,13 @@ class ScoreBoard extends StatelessWidget {
     return Container(
       child: HorizontalDataTable(
         leftHandSideColumnWidth: columnWidth[0],
-        rightHandSideColumnWidth: MediaQuery.of(context).size.width - columnWidth[0],
+        rightHandSideColumnWidth:
+            MediaQuery.of(context).size.width - columnWidth[0],
         isFixedHeader: true,
         headerWidgets: _getTitleWidget(),
         leftSideItemBuilder: _generateFirstColumnRow,
         rightSideItemBuilder: _generateRightHandSideColumnRow,
-        itemCount: 3,
+        itemCount: scores?.length,
         rowSeparatorWidget: const Divider(
           color: Colors.black54,
           height: 1.0,
@@ -70,7 +75,7 @@ class ScoreBoard extends StatelessWidget {
   Widget _generateFirstColumnRow(BuildContext context, int index) {
     return Container(
       child: Text(
-        '2020-06-01',
+        scores[index].date,
         style: TextStyle(
           fontSize: _fontSize,
         ),
@@ -88,25 +93,25 @@ class ScoreBoard extends StatelessWidget {
       children: <Widget>[
         getCell(
           index: index,
-          label: '30', // 出题数
+          label: scores[index].total, // 出题数
           width: columnWidth[1],
           height: 40,
         ),
         getCell(
           index: index,
-          label: '30', // 正确数
+          label: scores[index].correct, // 正确数
           width: columnWidth[2],
           height: 40,
         ),
         getCell(
           index: index,
-          label: '99.5',  // 分数
+          label: scores[index].score, // 分数
           width: columnWidth[3],
           height: 40,
         ),
         getCell(
           index: index,
-          label: '30',  // 连击数
+          label: scores[index].combo, // 连击数
           width: columnWidth[3],
           height: 40,
         ),

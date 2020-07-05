@@ -25,3 +25,5 @@ doc/api/
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 ios/
+.flutter-plugins
+.flutter-plugins-dependencies

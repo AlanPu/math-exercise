@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:math_exercise/model/question.dart';
 import 'package:math_exercise/model/question_result.dart';
+import 'package:math_exercise/model/score.dart';
+import 'package:math_exercise/persistance/local_db.dart';
 import 'package:math_exercise/ui/widgets/answer_input_decoration.dart';
 import 'package:math_exercise/ui/widgets/question_bubble.dart';
 import 'package:math_exercise/ui/image/image_animation.dart';
@@ -34,6 +36,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   int currentNum = 1;
   int correctCount = 0;
   int combo = 0;
+  int maxCombo = 0;
   int numRange;
   Question question;
   int answer;
@@ -97,6 +100,9 @@ class _ExerciseAreaState extends State<ExerciseArea> {
           isLastCorrect = true;
           if (isLastCorrect) {
             combo++;
+            if (maxCombo < combo) {
+              maxCombo = combo;
+            }
           }
         } else {
           question.wrongAnswer = int.parse(value);
@@ -144,6 +150,13 @@ class _ExerciseAreaState extends State<ExerciseArea> {
       );
       img.setChild(imgHappyFace);
     });
+
+    LocalDb().insert(Score(
+      total: numOfExercise,
+      correct: correctCount,
+      combo: maxCombo,
+      score: _calculateScore(),
+    ));
   }
 
   List<Widget> _getProgressTexts() {
@@ -204,10 +217,11 @@ class _ExerciseAreaState extends State<ExerciseArea> {
     );
   }
 
-  void _showScoreBoard() {
+  void _showScoreBoard() async {
+    final List<Score> scores = await LocalDb().getAll();
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ScoreBoard(),
+        builder: (context) => ScoreBoard(scores: scores,),
       ),
     );
   }
@@ -218,6 +232,13 @@ class _ExerciseAreaState extends State<ExerciseArea> {
       score = score.toInt() + 0.5;
     }
     return score;
+  }
+
+  Widget _drawQuestionBubble() {
+    return _widgetWithPadding(
+      widget: QuestionBubble(text: question.getQuestion()),
+      left: 130.0,
+    );
   }
 
   @override
@@ -244,45 +265,57 @@ class _ExerciseAreaState extends State<ExerciseArea> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _widgetWithPadding(
-                    widget: QuestionBubble(text: question.getQuestion()),
-                    left: 130.0,
-                  ),
-                  _widgetWithPadding(
-                    widget: img.child,
-                    left: 30.0,
-                  ),
-                  _widgetWithPadding(
-                      widget: answerInputField, left: 8.0, right: 8.0),
+                  _drawQuestionBubble(),
+                  _drawImage(),
+                  _drawAnswerInput(),
                 ],
               ),
             ),
-            Visibility(
-              visible: isCompleted,
-              child: Center(
-                child: RaisedButton(
-                  color: Colors.lightBlue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(16.0),
-                    ),
-                  ),
-                  padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                  child: Text(
-                    '历史成绩',
-                    style: TextStyle(
-                      fontFamily: styles.fontFamily,
-                      fontSize: 22.0,
-                      color: Colors.white,
-                    ),
-                  ),
-                  onPressed: () {
-                    _showScoreBoard();
-                  },
-                ),
-              ),
-            ),
+            _drawScoreBoardButton(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _drawAnswerInput() {
+    return _widgetWithPadding(
+      widget: answerInputField,
+      left: 8.0,
+      right: 8.0,
+    );
+  }
+
+  Widget _drawImage() {
+    return _widgetWithPadding(
+      widget: img.child,
+      left: 30.0,
+    );
+  }
+
+  Widget _drawScoreBoardButton() {
+    return Visibility(
+      visible: isCompleted,
+      child: Center(
+        child: RaisedButton(
+          color: Colors.lightBlue,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(16.0),
+            ),
+          ),
+          padding: EdgeInsets.only(left: 20.0, right: 20.0),
+          child: Text(
+            '历史成绩',
+            style: TextStyle(
+              fontFamily: styles.fontFamily,
+              fontSize: 22.0,
+              color: Colors.white,
+            ),
+          ),
+          onPressed: () {
+            _showScoreBoard();
+          },
         ),
       ),
     );
