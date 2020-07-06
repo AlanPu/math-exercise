@@ -10,7 +10,7 @@ class LocalDb {
       join(await getDatabasesPath(), 'math_exercise.db'),
       onCreate: (db, version) {
         return db.execute(
-          "CREATE TABLE scores(date TEXT, total TEXT, correct TEXT, combo TEXT, score TEXT)",
+          "CREATE TABLE scores(date TEXT, total TEXT, correct TEXT, combo TEXT, score TEXT, time TEXT)",
         );
       },
       version: 1,
@@ -43,6 +43,7 @@ class LocalDb {
         combo: int.parse(maps[i]['combo']),
         score: double.parse(maps[i]['score']),
         date: maps[i]['date'],
+        time: maps[i]['time'],
       );
     });
   }

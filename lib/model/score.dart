@@ -6,13 +6,15 @@ class Score {
   String correct;
   String combo;
   String score;
+  String time;
 
   Score(
       {this.date = '',
       int total = 0,
       int correct = 0,
       int combo = 0,
-      double score = 0}) {
+      double score = 0,
+      this.time = ''}) {
     if (this.date == '') {
       this.date = DateFormat('yyyy-MM-dd').format(DateTime.now());
     }
@@ -37,6 +39,7 @@ class Score {
       'correct': correct,
       'combo': combo,
       'score': score,
+      'time': time,
     };
   }
 }

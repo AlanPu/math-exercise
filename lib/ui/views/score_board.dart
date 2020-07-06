@@ -5,7 +5,8 @@ import 'package:math_exercise/model/score.dart';
 
 class ScoreBoard extends StatelessWidget {
   final double _fontSize = 16;
-  final columnWidth = [100.0, 65.0, 65.0, 65.0, 65.0];
+  final _columnWidth = [100.0, 65.0, 65.0, 65.0, 65.0, 100.0];
+  final _rightHandSideColumnWidth = 360.0;
   final List<Score> scores;
 
   ScoreBoard({this.scores});
@@ -24,9 +25,8 @@ class ScoreBoard extends StatelessWidget {
   _showTable(BuildContext context) {
     return Container(
       child: HorizontalDataTable(
-        leftHandSideColumnWidth: columnWidth[0],
-        rightHandSideColumnWidth:
-            MediaQuery.of(context).size.width - columnWidth[0],
+        leftHandSideColumnWidth: _columnWidth[0],
+        rightHandSideColumnWidth: _rightHandSideColumnWidth,
         isFixedHeader: true,
         headerWidgets: _getTitleWidget(),
         leftSideItemBuilder: _generateFirstColumnRow,
@@ -46,11 +46,12 @@ class ScoreBoard extends StatelessWidget {
 
   List<Widget> _getTitleWidget() {
     return [
-      _getTitleItemWidget('日期', columnWidth[0]),
-      _getTitleItemWidget('出题数', columnWidth[1]),
-      _getTitleItemWidget('正确数', columnWidth[2]),
-      _getTitleItemWidget('分数', columnWidth[3]),
-      _getTitleItemWidget('连击数', columnWidth[4]),
+      _getTitleItemWidget('日期', _columnWidth[0]),
+      _getTitleItemWidget('出题数', _columnWidth[1]),
+      _getTitleItemWidget('正确数', _columnWidth[2]),
+      _getTitleItemWidget('分数', _columnWidth[3]),
+      _getTitleItemWidget('连击数', _columnWidth[4]),
+      _getTitleItemWidget('时间', _columnWidth[5]),
     ];
   }
 
@@ -80,7 +81,7 @@ class ScoreBoard extends StatelessWidget {
           fontSize: _fontSize,
         ),
       ),
-      width: columnWidth[0],
+      width: _columnWidth[0],
       height: 40,
       padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
       alignment: Alignment.centerLeft,
@@ -94,25 +95,31 @@ class ScoreBoard extends StatelessWidget {
         getCell(
           index: index,
           label: scores[index].total, // 出题数
-          width: columnWidth[1],
+          width: _columnWidth[1],
           height: 40,
         ),
         getCell(
           index: index,
           label: scores[index].correct, // 正确数
-          width: columnWidth[2],
+          width: _columnWidth[2],
           height: 40,
         ),
         getCell(
           index: index,
           label: scores[index].score, // 分数
-          width: columnWidth[3],
+          width: _columnWidth[3],
           height: 40,
         ),
         getCell(
           index: index,
           label: scores[index].combo, // 连击数
-          width: columnWidth[3],
+          width: _columnWidth[4],
+          height: 40,
+        ),
+        getCell(
+          index: index,
+          label: scores[index].time, // 时间
+          width: _columnWidth[5],
           height: 40,
         ),
       ],
