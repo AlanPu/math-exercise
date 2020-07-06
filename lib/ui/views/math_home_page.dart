@@ -2,7 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:math_exercise/model/score.dart';
+import 'package:math_exercise/persistance/local_db.dart';
 import 'package:math_exercise/ui/image/image_styles.dart';
+import 'package:math_exercise/ui/views/score_board.dart';
 import 'package:math_exercise/ui/widgets/num_slider.dart';
 import 'package:math_exercise/ui/global/styles.dart' as styles;
 import 'package:math_exercise/ui/views/exercise/exercise_page.dart';
@@ -24,6 +27,13 @@ class _HomePageState extends State<MathHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: Colors.white,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.list),
+          tooltip: '历史成绩',
+          onPressed: () {
+            _showScoreBoard();
+          },
+        ),
         body: Container(
             child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -99,6 +109,17 @@ class _HomePageState extends State<MathHomePage> {
                     },
                   ))
             ])));
+  }
+
+  void _showScoreBoard() async {
+    final List<Score> scores = await LocalDb().getAll();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ScoreBoard(
+          scores: scores,
+        ),
+      ),
+    );
   }
 
   void _navigateToNextScreen(BuildContext context) {
