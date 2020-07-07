@@ -20,8 +20,9 @@ class MathHomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<MathHomePage> {
-  int numRange = 100;
-  int numOfExercise = 30;
+  int _numRange = 100;
+  int _numOfExercise = 30;
+  bool _isCountDownMode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +70,7 @@ class _HomePageState extends State<MathHomePage> {
                 label: '出题范围',
                 min: 0,
                 max: 100,
-                value: numRange,
+                value: _numRange,
                 margin: EdgeInsets.only(
                   top: 50,
                   left: 40,
@@ -77,38 +78,85 @@ class _HomePageState extends State<MathHomePage> {
                 ),
               ).build(onChanged: (int newValue) {
                 setState(() {
-                  numRange = newValue;
+                  _numRange = newValue;
                 });
               }),
               NumSlider(
                   label: '出题数',
                   min: 1,
                   max: 100,
-                  value: numOfExercise,
+                  value: _numOfExercise,
                   margin: EdgeInsets.only(
                     top: 10,
                     left: 40,
                     right: 40,
                   )).build(onChanged: (int newValue) {
                 setState(() {
-                  numOfExercise = newValue;
+                  _numOfExercise = newValue;
                 });
               }),
               Container(
-                  margin: EdgeInsets.only(
-                    top: 50,
-                  ),
-                  child: FlatButton(
-                    child: Icon(
-                      Icons.arrow_forward,
-                      size: 60,
-                      color: Colors.lightBlue,
-                    ),
-                    onPressed: () {
-                      _navigateToNextScreen(context);
-                    },
-                  ))
+                margin: EdgeInsets.only(
+                  top: 10.0,
+                  left: 40.0,
+                  right: 40.0,
+                ),
+                color: Colors.lightBlue,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                        padding: EdgeInsets.only(
+                          left: 10.0,
+                          right: 10.0,
+                        ),
+                        child: Row(
+                          children: <Widget>[
+                            _getCountDownModeCheckbox(),
+                            Text(
+                              '速度大挑战',
+                              style: TextStyle(
+                                fontFamily: styles.fontFamily,
+                                fontSize: 20.0,
+                                color: Colors.white,
+                                backgroundColor: Colors.lightBlue,
+                              ),
+                            ),
+                          ],
+                        )),
+                    _getStartButton(),
+                  ],
+                ),
+              )
             ])));
+  }
+
+  Widget _getStartButton() {
+    return FlatButton(
+      child: Icon(
+        Icons.arrow_forward,
+        size: 45,
+        color: Colors.white,
+      ),
+      onPressed: () {
+        _navigateToNextScreen(context);
+      },
+    );
+  }
+
+  Widget _getCountDownModeCheckbox() {
+    return Theme(
+      data: ThemeData(unselectedWidgetColor: Colors.white),
+      child: Checkbox(
+          value: _isCountDownMode,
+          activeColor: Colors.lightBlue,
+          checkColor: Colors.white,
+          onChanged: (value) {
+            setState(() {
+              _isCountDownMode = value;
+            });
+          }),
+    );
   }
 
   void _showScoreBoard() async {
@@ -125,8 +173,9 @@ class _HomePageState extends State<MathHomePage> {
   void _navigateToNextScreen(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ExercisePage(
-              numRange: numRange,
-              numOfExercise: numOfExercise,
+              numRange: _numRange,
+              numOfExercise: _numOfExercise,
+              isCountDownMode: _isCountDownMode,
             )));
   }
 }

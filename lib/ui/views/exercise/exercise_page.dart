@@ -6,9 +6,13 @@ import 'exercise_area.dart';
 class ExercisePage extends StatelessWidget {
   final int numRange;
   final int numOfExercise;
+  final bool isCountDownMode;
 
   ExercisePage(
-      {Key key, @required this.numRange, @required this.numOfExercise})
+      {Key key,
+      @required this.numRange,
+      @required this.numOfExercise,
+      @required this.isCountDownMode})
       : super(key: key);
 
   @override
