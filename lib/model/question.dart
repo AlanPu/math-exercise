@@ -7,18 +7,23 @@ import 'question_division.dart';
 import 'question_multiply.dart';
 import 'question_subtraction.dart';
 
-
 abstract class Question {
   int num1;
   int num2;
   int correctAnswer;
-  int wrongAnswer;
+  String wrongAnswer;
   int tips = 0;
   QuestionType type;
 
   String getQuestion();
 
-  bool isCorrect(int answer);
+  bool isCorrect(String answer) {
+    if (answer == '-') {
+      return false;
+    } else {
+      return int.parse(answer) == this.correctAnswer;
+    }
+  }
 
   static Question next({int min, int max}) {
     int i = Random().nextInt(5);
@@ -44,4 +49,4 @@ abstract class Question {
   }
 }
 
-enum QuestionType { add, subtraction, multiply, division }
+enum QuestionType { add, subtraction, multiply, division, combined }

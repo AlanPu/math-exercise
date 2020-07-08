@@ -25,6 +25,7 @@ class ExercisePage extends StatelessWidget {
       body: ExerciseArea(
         numOfExercise: numOfExercise,
         numRange: numRange,
+        isCountDownMode: isCountDownMode,
       ),
     );
   }

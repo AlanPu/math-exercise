@@ -24,7 +24,7 @@ class QuestionResult extends Question {
   }
 
   @override
-  bool isCorrect(int answer) {
+  bool isCorrect(String answer) {
     return false;
   }
 }

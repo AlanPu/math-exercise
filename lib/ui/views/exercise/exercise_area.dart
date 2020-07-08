@@ -21,41 +21,50 @@ import 'package:math_exercise/ui/widgets/question_bubble.dart';
 class ExerciseArea extends StatefulWidget {
   final int numRange;
   final int numOfExercise;
+  final bool isCountDownMode;
 
-  ExerciseArea({Key key, @required this.numRange, @required this.numOfExercise})
+  ExerciseArea(
+      {Key key,
+      @required this.numRange,
+      @required this.numOfExercise,
+      @required this.isCountDownMode})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ExerciseAreaState(
         numOfExercise: numOfExercise,
         numRange: numRange,
+        isCountDownMode: isCountDownMode,
       );
 }
 
 class _ExerciseAreaState extends State<ExerciseArea> {
-  int currentNum = 1;
-  int correctCount = 0;
-  int combo = 0;
-  int maxCombo = 0;
+  static const int COUNT_DOWN_SECOND_EASY = 10;
+  static const int COUNT_DOWN_SECOND_HARD = 20;
+  static const String BLANK_ANSWER = '-';
+
+  bool isCountDownMode;
   int numRange;
-  Question question;
-  int answer;
   int numOfExercise;
-  bool isLastCorrect = false;
-  final answerTextController = TextEditingController();
-  FocusNode answerFocusNode = FocusNode();
-  int imageStartIndex = 1;
-  int imageEndIndex = 1;
-  TextField answerInputField;
-  bool showActionButton = false;
-  bool isCompleted = false;
-  List<Question> wrongAnswers = List<Question>();
-  int totalSecond = 0;
-  int totalMinute = 0;
-  int countDownSecond = 10;
-  int remainingSecond = 0;
-  Text totalTimeText;
-  Text countDownText;
+
+  int _currentNum = 1;
+  int _correctCount = 0;
+  int _combo = 0;
+  int _maxCombo = 0;
+  Question _question;
+  bool _isLastCorrect = false;
+  final _answerTextController = TextEditingController();
+  FocusNode _answerFocusNode = FocusNode();
+  TextField _answerInputField;
+  bool _showActionButton = false;
+  bool _isCompleted = false;
+  bool _pause = false;
+  List<Question> _wrongAnswers = List<Question>();
+  int _totalSecond = 0;
+  int _totalMinute = 0;
+  int _countDownSecond = 0;
+  Widget _totalTimeText;
+  Widget _countDownText;
   Timer _timer;
 
   static final Image imgHappyFace = Image.asset(
@@ -70,9 +79,13 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   );
   Img img = Img(child: imgHappyFace);
 
-  _ExerciseAreaState({@required this.numRange, @required this.numOfExercise})
+  _ExerciseAreaState(
+      {@required this.numRange,
+      @required this.numOfExercise,
+      @required this.isCountDownMode})
       : super() {
-    question = Question.next(min: 0, max: numRange);
+    _question = Question.next(min: 0, max: numRange);
+    _calculateCountDownSecond();
   }
 
   static getImageAnimation(int imgLowIndex, int imgHighIndex) {
@@ -86,17 +99,29 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   void _startTimeCounter() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (isCompleted) {
+      if (_isCompleted) {
         timer.cancel();
         return;
       }
-      totalSecond++;
-      if (totalSecond == 60) {
-        totalSecond = 0;
-        totalMinute++;
+      if (!_pause) {
+        _totalSecond++;
+      }
+      if (_totalSecond == 60) {
+        _totalSecond = 0;
+        _totalMinute++;
+      }
+
+      if (isCountDownMode && !_pause) {
+        if (_countDownSecond > 0) {
+          _countDownSecond--;
+        } else {
+          _pause = true;
+          _submitAnswer(BLANK_ANSWER);
+        }
       }
       setState(() {
-        totalTimeText = _getTotalTimeText();
+        _totalTimeText = _getTotalTimeText();
+        _countDownText = _getCountDownText();
       });
     });
   }
@@ -111,88 +136,101 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   void initState() {
     super.initState();
 
-    showActionButton = (question.type == QuestionType.multiply ||
-        question.type == QuestionType.division);
+    _showActionButton = (_question.type == QuestionType.multiply ||
+        _question.type == QuestionType.division);
 
-    totalTimeText = _getTotalTimeText();
+    _totalTimeText = _getTotalTimeText();
 
-    countDownText = _getCountDownText();
+    _countDownText = _getCountDownText();
 
-    answerInputField = TextField(
-      focusNode: answerFocusNode,
-      controller: answerTextController,
-      autocorrect: false,
-      keyboardType: TextInputType.number,
-      decoration: AnswerInputDecoration(),
-      onSubmitted: (String value) {
-        answer = int.parse(value);
-        if (question.isCorrect(answer)) {
-          setState(() {
-            img.setChild(getImageAnimation(2, 3));
-          });
-          correctCount++;
-          isLastCorrect = true;
-          if (isLastCorrect) {
-            combo++;
-            if (maxCombo < combo) {
-              maxCombo = combo;
-            }
-          }
-        } else {
-          question.wrongAnswer = int.parse(value);
-          wrongAnswers.add(question);
-          setState(() {
-            img.setChild(imgSadFace);
-          });
-          isLastCorrect = false;
-          combo = 0;
-        }
-        Timer(Duration(seconds: 2), () {
-          if (currentNum == numOfExercise) {
-            _completeExercise();
-          } else {
-            _nextQuestion();
-          }
-        });
-      },
-    );
+    _answerInputField = TextField(
+        focusNode: _answerFocusNode,
+        controller: _answerTextController,
+        autocorrect: false,
+        keyboardType: TextInputType.number,
+        decoration: AnswerInputDecoration(),
+        onSubmitted: (value) => _submitAnswer(value));
 
     _startTimeCounter();
+  }
+
+  void _submitAnswer(value) {
+    _pause = true;
+    if (_question.isCorrect(value)) {
+      setState(() {
+        img.setChild(getImageAnimation(2, 3));
+      });
+      _correctCount++;
+      _isLastCorrect = true;
+      if (_isLastCorrect) {
+        _combo++;
+        if (_maxCombo < _combo) {
+          _maxCombo = _combo;
+        }
+      }
+    } else {
+      _question.wrongAnswer = value;
+      _wrongAnswers.add(_question);
+      setState(() {
+        img.setChild(imgSadFace);
+      });
+      _isLastCorrect = false;
+      _combo = 0;
+    }
+    Timer(Duration(seconds: 2), () {
+      if (_currentNum == numOfExercise) {
+        _completeExercise();
+      } else {
+        _nextQuestion();
+        _pause = false;
+      }
+    });
   }
 
   void _nextQuestion() {
     setState(() {
       img.setChild(imgHappyFace);
-      currentNum++;
-      question = Question.next(min: 0, max: numRange);
-      showActionButton = (question.type == QuestionType.multiply ||
-          question.type == QuestionType.division);
-      answerTextController.clear();
-      answerFocusNode.requestFocus();
+      _currentNum++;
+      _question = Question.next(min: 0, max: numRange);
+      _calculateCountDownSecond();
+      _showActionButton = (_question.type == QuestionType.multiply ||
+          _question.type == QuestionType.division);
+      _answerTextController.clear();
+      _answerFocusNode.requestFocus();
     });
   }
 
+  void _calculateCountDownSecond() {
+    _countDownSecond += _question.type == QuestionType.combined
+        ? COUNT_DOWN_SECOND_HARD
+        : COUNT_DOWN_SECOND_EASY;
+  }
+
   void _completeExercise() {
-    isCompleted = true;
-    showActionButton = wrongAnswers.length > 0;
+    _isCompleted = true;
+    _showActionButton = _wrongAnswers.length > 0;
     setState(() {
-      answerFocusNode.unfocus();
-      answerTextController.clear();
-      answerInputField = TextField(enabled: false);
-      question = QuestionResult(
+      _answerFocusNode.unfocus();
+      _answerTextController.clear();
+      _answerInputField = TextField(enabled: false);
+      _question = QuestionResult(
         total: numOfExercise,
-        correct: correctCount,
+        correct: _correctCount,
         score: _calculateScore(),
       );
       img.setChild(imgHappyFace);
     });
 
+    _saveToDb();
+  }
+
+  void _saveToDb() {
     LocalDb().insert(Score(
       total: numOfExercise,
-      correct: correctCount,
-      combo: maxCombo,
+      correct: _correctCount,
+      combo: _maxCombo,
       score: _calculateScore(),
-      time: _formatTime(totalMinute, totalSecond),
+      time: _formatTime(_totalMinute, _totalSecond),
     ));
   }
 
@@ -200,15 +238,15 @@ class _ExerciseAreaState extends State<ExerciseArea> {
     return [
       ProgressText(
         label: '当前题数',
-        value: currentNum,
+        value: _currentNum,
       ).build(),
       ProgressText(
         label: '正确题数',
-        value: correctCount,
+        value: _correctCount,
       ).build(),
       ProgressText(
         label: '连击数',
-        value: combo,
+        value: _combo,
       ).build(),
     ];
   }
@@ -216,7 +254,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   void _showReviewPage() {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => ReviewPage(wrongAnswers: wrongAnswers),
+        builder: (context) => ReviewPage(wrongAnswers: _wrongAnswers),
       ),
     );
   }
@@ -240,12 +278,12 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   Widget _getContextButton() {
     return FloatingActionButton(
-      child: Icon(isCompleted ? Icons.rate_review : Icons.info),
+      child: Icon(_isCompleted ? Icons.rate_review : Icons.info),
       onPressed: () {
-        if (!isCompleted) {
+        if (!_isCompleted) {
           showDialog(
             context: context,
-            builder: (_) => ImageDialog(index: question.tips),
+            builder: (_) => ImageDialog(index: _question.tips),
           );
         } else {
           _showReviewPage();
@@ -266,7 +304,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   }
 
   double _calculateScore() {
-    double score = correctCount / numOfExercise * 100;
+    double score = _correctCount / numOfExercise * 100;
     if (score != score.toInt()) {
       score = score.toInt() + 0.5;
     }
@@ -275,7 +313,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   Widget _drawQuestionBubble() {
     return _widgetWithPadding(
-      widget: QuestionBubble(text: question.getQuestion()),
+      widget: QuestionBubble(text: _question.getQuestion()),
       left: 130.0,
     );
   }
@@ -288,14 +326,14 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   List<Widget> _getTimer() {
     return [
-      totalTimeText,
-      countDownText,
+      _totalTimeText,
+      _countDownText,
     ];
   }
 
   Widget _getTotalTimeText() {
     return Text(
-      '用时：${_formatTime(totalMinute, totalSecond)}',
+      '用时：${_formatTime(_totalMinute, _totalSecond)}',
       style: TextStyle(
         fontFamily: styles.fontFamily,
         fontSize: 16.0,
@@ -305,12 +343,15 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   }
 
   Widget _getCountDownText() {
-    return Text('倒计时：${_formatTime(0, countDownSecond)}',
-        style: TextStyle(
-          fontFamily: styles.fontFamily,
-          fontSize: 16.0,
-          color: Colors.black,
-        ));
+    return Visibility(
+      visible: isCountDownMode,
+      child: Text('倒计时：${_formatTime(0, _countDownSecond)}',
+          style: TextStyle(
+            fontFamily: styles.fontFamily,
+            fontSize: 16.0,
+            color: Colors.black,
+          )),
+    );
   }
 
   @override
@@ -318,7 +359,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
       floatingActionButton: Visibility(
-        visible: showActionButton,
+        visible: _showActionButton,
         child: _widgetWithPadding(widget: _getContextButton(), top: 200.0),
       ),
       body: Center(
@@ -356,7 +397,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   Widget _drawAnswerInput() {
     return _widgetWithPadding(
-      widget: answerInputField,
+      widget: _answerInputField,
       left: 8.0,
       right: 8.0,
     );
@@ -371,7 +412,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   Widget _drawScoreBoardButton() {
     return Visibility(
-      visible: isCompleted,
+      visible: _isCompleted,
       child: Center(
         child: RaisedButton(
           color: Colors.lightBlue,

@@ -18,9 +18,4 @@ class QuestionDivision extends Question {
   String getQuestion() {
     return '$num1 ÷ $num2 = ?';
   }
-
-  @override
-  bool isCorrect(int answer) {
-    return answer == this.correctAnswer;
-  }
 }

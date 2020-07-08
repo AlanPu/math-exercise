@@ -12,6 +12,7 @@ class QuestionCombined extends Question {
   String question;
 
   QuestionCombined({int min, int max}) {
+    this.type = QuestionType.combined;
     op1 = Random().nextInt(2);
     op2 = Random().nextInt(2);
     this.num1 = Random().nextInt(max - 1) + min;
@@ -73,10 +74,5 @@ class QuestionCombined extends Question {
   @override
   String getQuestion() {
     return question;
-  }
-
-  @override
-  bool isCorrect(int answer) {
-    return answer == correctAnswer;
   }
 }

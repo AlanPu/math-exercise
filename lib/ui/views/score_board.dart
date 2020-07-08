@@ -74,9 +74,13 @@ class ScoreBoard extends StatelessWidget {
 
   // Index column
   Widget _generateFirstColumnRow(BuildContext context, int index) {
+    
+    // Calculate the data index as we need to show the data in descendent order
+    final int dataIndex = scores.length - 1 - index;
+
     return Container(
       child: Text(
-        scores[index].date,
+        scores[dataIndex].date,
         style: TextStyle(
           fontSize: _fontSize,
         ),
@@ -90,35 +94,39 @@ class ScoreBoard extends StatelessWidget {
 
   // Non-index columns
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
+    
+    // Calculate the data index as we need to show the data in descendent order
+    final int dataIndex = scores.length - 1 - index;
+
     return Row(
       children: <Widget>[
         getCell(
           index: index,
-          label: scores[index].total, // 出题数
+          label: scores[dataIndex].total, // 出题数
           width: _columnWidth[1],
           height: 40,
         ),
         getCell(
           index: index,
-          label: scores[index].correct, // 正确数
+          label: scores[dataIndex].correct, // 正确数
           width: _columnWidth[2],
           height: 40,
         ),
         getCell(
           index: index,
-          label: scores[index].score, // 分数
+          label: scores[dataIndex].score, // 分数
           width: _columnWidth[3],
           height: 40,
         ),
         getCell(
           index: index,
-          label: scores[index].combo, // 连击数
+          label: scores[dataIndex].combo, // 连击数
           width: _columnWidth[4],
           height: 40,
         ),
         getCell(
           index: index,
-          label: scores[index].time, // 时间
+          label: scores[dataIndex].time, // 时间
           width: _columnWidth[5],
           height: 40,
         ),

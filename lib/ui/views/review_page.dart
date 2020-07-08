@@ -101,7 +101,7 @@ class ReviewPage extends StatelessWidget {
         ),
         getCell(
           index: index,
-          label: wrongAnswers[index].wrongAnswer.toString(),
+          label: wrongAnswers[index].wrongAnswer,
           width: 80,
           height: 40,
         ),
