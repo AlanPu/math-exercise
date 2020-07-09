@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+
 import 'package:math_exercise/model/question.dart';
 import 'package:math_exercise/model/question_result.dart';
 import 'package:math_exercise/model/score.dart';
@@ -66,6 +68,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   Widget _totalTimeText;
   Widget _countDownText;
   Timer _timer;
+  bool _gettingReady = true;
 
   static final Image imgHappyFace = Image.asset(
     'assets/images/pico-1.png',
@@ -151,7 +154,9 @@ class _ExerciseAreaState extends State<ExerciseArea> {
         decoration: AnswerInputDecoration(),
         onSubmitted: (value) => _submitAnswer(value));
 
-    _startTimeCounter();
+    if (!isCountDownMode) {
+      _startTimeCounter();
+    }
   }
 
   void _submitAnswer(value) {
@@ -356,43 +361,87 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
-      floatingActionButton: Visibility(
-        visible: _showActionButton,
-        child: _widgetWithPadding(widget: _getContextButton(), top: 200.0),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: _getProgressTexts(),
+    return Stack(
+      children: <Widget>[
+        Scaffold(
+          floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
+          floatingActionButton: Visibility(
+            visible: _showActionButton,
+            child: _widgetWithPadding(widget: _getContextButton(), top: 200.0),
+          ),
+          body: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: _getProgressTexts(),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: _getTimer(),
+                ),
+                Container(
+                  margin: EdgeInsets.only(
+                    top: 30,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      _drawQuestionBubble(),
+                      _drawImage(),
+                      _drawAnswerInput(),
+                    ],
+                  ),
+                ),
+                _drawScoreBoardButton(),
+              ],
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: _getTimer(),
-            ),
-            Container(
-              margin: EdgeInsets.only(
-                top: 30,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _drawQuestionBubble(),
-                  _drawImage(),
-                  _drawAnswerInput(),
-                ],
-              ),
-            ),
-            _drawScoreBoardButton(),
-          ],
+          ),
         ),
-      ),
+        _getReadyCountDown(),
+      ],
     );
+  }
+
+  Widget _getReadyCountDown() {
+    if (isCountDownMode) {
+      return Visibility(
+        visible: _gettingReady,
+        child: Positioned.fill(
+          child: Container(
+            color: Colors.white,
+            alignment: Alignment.center,
+            child: ScaleAnimatedTextKit(
+              duration: Duration(milliseconds: 1500),
+              pause: Duration(microseconds: 200),
+              repeatForever: false,
+              totalRepeatCount: 1,
+              text: ['3', '2', '1', 'Go!'],
+              textStyle: TextStyle(
+                fontSize: 90.0,
+                fontFamily: styles.fontFamily,
+                color: Colors.lightBlue,
+              ),
+              textAlign: TextAlign.start,
+              alignment: AlignmentDirectional.topStart,
+              onFinished: () {
+                setState(() {
+                  _gettingReady = false;
+                  _startTimeCounter();
+                });
+              },
+            ),
+          ),
+        ),
+      );
+    } else {
+      return Visibility(
+        visible: false,
+        child: Container(),
+      );
+    }
   }
 
   Widget _drawAnswerInput() {
