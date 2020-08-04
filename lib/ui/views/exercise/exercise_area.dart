@@ -63,7 +63,6 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   bool _pause = false;
   List<Question> _wrongAnswers = List<Question>();
   int _totalSecond = 0;
-  int _totalMinute = 0;
   int _countDownSecond = 0;
   Widget _totalTimeText;
   Widget _countDownText;
@@ -108,10 +107,6 @@ class _ExerciseAreaState extends State<ExerciseArea> {
       }
       if (!_pause) {
         _totalSecond++;
-      }
-      if (_totalSecond == 60) {
-        _totalSecond = 0;
-        _totalMinute++;
       }
 
       if (isCountDownMode && !_pause) {
@@ -235,7 +230,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
       correct: _correctCount,
       combo: _maxCombo,
       score: _calculateScore(),
-      time: _formatTime(_totalMinute, _totalSecond),
+      time: _formatTime(second: _totalSecond),
     ));
   }
 
@@ -323,7 +318,9 @@ class _ExerciseAreaState extends State<ExerciseArea> {
     );
   }
 
-  String _formatTime(int minute, int second) {
+  String _formatTime({int minute = 0, int second = 0}) {
+    minute += second ~/ 60;
+    second = second % 60;
     var m = minute.toString().padLeft(2, '0');
     var s = second.toString().padLeft(2, '0');
     return '$m:$s';
@@ -338,7 +335,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
 
   Widget _getTotalTimeText() {
     return Text(
-      '用时：${_formatTime(_totalMinute, _totalSecond)}',
+      '用时：${_formatTime(second: _totalSecond)}',
       style: TextStyle(
         fontFamily: styles.fontFamily,
         fontSize: 16.0,
@@ -350,7 +347,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
   Widget _getCountDownText() {
     return Visibility(
       visible: isCountDownMode,
-      child: Text('倒计时：${_formatTime(0, _countDownSecond)}',
+      child: Text('倒计时：${_formatTime(second: _countDownSecond)}',
           style: TextStyle(
             fontFamily: styles.fontFamily,
             fontSize: 16.0,
