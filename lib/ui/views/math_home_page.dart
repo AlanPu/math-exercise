@@ -84,7 +84,7 @@ class _HomePageState extends State<MathHomePage> {
               NumSlider(
                   label: '出题数',
                   min: 1,
-                  max: 100,
+                  max: 30,
                   value: _numOfExercise,
                   margin: EdgeInsets.only(
                     top: 10,
