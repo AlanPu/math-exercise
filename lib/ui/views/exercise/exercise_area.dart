@@ -364,7 +364,7 @@ class _ExerciseAreaState extends State<ExerciseArea> {
           floatingActionButtonLocation: FloatingActionButtonLocation.startTop,
           floatingActionButton: Visibility(
             visible: _showActionButton,
-            child: _widgetWithPadding(widget: _getContextButton(), top: 200.0),
+            child: _widgetWithPadding(widget: _getContextButton(), top: 100.0),
           ),
           body: Center(
             child: Column(
