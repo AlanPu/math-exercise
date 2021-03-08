@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:math_exercise/model/question_combined.dart';
 import 'package:math_exercise/model/question_division2.dart';
 
@@ -25,7 +27,7 @@ abstract class Question {
   }
 
   static Question next({int min, int max}) {
-    int i = 5; //Random().nextInt(6);
+    int i = Random().nextInt(6);
     switch (i) {
       case 0:
         return QuestionAdd(min: min, max: max);

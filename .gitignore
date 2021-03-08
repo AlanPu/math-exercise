@@ -27,3 +27,8 @@ doc/api/
 ios/
 .flutter-plugins
 .flutter-plugins-dependencies
+
+.idea/
+.gradle/
+local.properties
+
